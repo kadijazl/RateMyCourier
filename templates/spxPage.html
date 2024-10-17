@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateMyCourier</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff; /* White text color */
+            min-height: 100vh; /* Ensure the body takes up at least the full height of the viewport */
+            display:flex; /* Use flexbox layout */
+            background-image: url('/static/bg1.jpg');
+            background-size: cover; /* Ensure the image covers the entire background */ 
+        }
+        
+        .sidebar {
+            width: 210px;
+            background-color: rgb(30, 30, 30);  
+            padding: 15px;
+            position: fixed; /* Set the position to fixed */
+            top: 0; /* Position the sidebar at the top of the viewport */
+            left: 0; /* Position the sidebar at the left of the viewport */
+            bottom: 0; /* Extend the sidebar to the bottom of the viewport */
+            overflow-y: auto; /* Allow vertical scrolling if the content exceeds the viewport height */
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 30px; /* Increase the margin-bottom value to add more space */
+            font-size: 28px;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            margin-left: 230px; /* Adjust the margin-left to account for the width of the fixed sidebar */
+        }
+        
+        .menu-item {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+        
+        .menu-item.active {
+        background-color: rgba(255, 168, 223, 0.42); /* Translucent purple background */
+        color: #fff; /* White text color */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px;
+        }
+        
+        .menu-item:hover {
+            color: #ffa8df; /* Change color on hover */
+        }
+    
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 20px; 
+        }
+    
+        .grid-container-2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr; /* Make the left box one-third of the width of the right box */
+            grid-gap: 10px; /* Gap between grid items */
+            margin-top: 10px; /* Add some space between the content and the grid */
+        }
+    
+        .grid-container-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            grid-gap: 10px; /* Gap between grid items */
+            margin-top: 10px; /* Add some space between the content and the grid */
+        }
+    
+        .grid-container-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; 
+            grid-gap: 10px; /* Gap between grid items */
+            margin-top: 10px; /* Add some space between the content and the grid */
+        }
+    
+        .box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .box iframe {
+            width: 100%;
+            border: none;
+            margin-bottom: 10px;
+        }
+    
+        .box img {
+            width: 80%; /* Ensure the image fills the box */
+            border-radius: 10px; /* Rounded corners for the image */
+        }
+        .welcome-text {
+        color: #ffa8df; /* Purple color */
+        font-size: 16px;
+        margin-bottom: 30px;
+
+    }
+    </style>
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <div>
+            <a href="/" class="menu-item"><h2>RateMyCourier</h2></a>
+                {% if current_user.is_authenticated %}
+                    <div class="welcome-text">
+                        <p class="welcome-text">Welcome, {{ current_user.name }}!</p>
+                    </div>
+                {% endif %}
+            <br>
+            <a href="/OverviewPage.html" class="menu-item">Overview</a>
+            <a href="/jntPage.html" class="menu-item">J&T Express</a>
+            <a href="/spxPage.html" class="menu-item active">SPX Xpress</a>
+            <a href="/dhlPage.html" class="menu-item">DHL Express</a>
+            <a href="/ComparePage.html" class="menu-item">Comparative Analysis</a>
+            <a href="/AnalyzerPage.html" class="menu-item">New Sentiment Analyzer</a>
+            {% if current_user.is_authenticated %}
+                <a href="/ReportPage.html" class="menu-item">Summary Report</a>
+                <a href="/logout" class="menu-item">Log Out</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="grid-container">
+            <div class="box">
+                <h1>SPX Xpress</h1>
+                <p>This page shows visualization of sentiment analysis for SPX Xpress.</p>
+            </div>
+        </div>
+
+        <div class="grid-container-2">
+            <div class="box">
+                <img src="\static\spx.jpg" alt="spx">  
+                <h2>SPX Xpress</h2> 
+                <p>Website: <a href="https://spx.com.my/en"style="color: white;">https://spx.com.my/en</a> </p>
+                <p>Contact: +60327779222</p>
+            </div>
+            <div class="box">
+                <h2>Sentiment Count</h2>
+                <iframe src="{{ url_for('spx1') }}" width="90%" height="300px" frameborder="0"></iframe>
+            </div>
+        </div>
+
+        <div class="grid-container-3">
+            <div class="box">
+                <h2>Sentiment Percentage</h2>
+                <iframe src="{{ url_for('spx2') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Sentiment Over Time</h2>
+                <iframe src="{{ url_for('spx3') }}" width="100%" height="400px" frameborder="0"></iframe>        
+            </div>
+            <div class="box">
+                <h2>English Sentiment</h2>
+                <iframe src="{{ url_for('spx4') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Malay Sentiment</h2>
+                <iframe src="{{ url_for('spx5') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+
+            <div class="box">
+                <h2>Negative Sentiment Word Cloud</h2>
+                <iframe src="{{ url_for('spx6') }}" width="100%" height="300px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Positive Sentiment Word Cloud</h2>
+                <iframe src="{{ url_for('spx8') }}" width="100%" height="300px" frameborder="0"></iframe>
+            </div>
+        </div>
+
+        <div class="grid-container-3">
+            <div class="box">
+                <h2>Speed Aspect</h2>
+                <iframe src="{{ url_for('spx9') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Speed Keywords</h2>
+                <iframe src="{{ url_for('spx10') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Reliability Aspect</h2>
+                <iframe src="{{ url_for('spx11') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+            <div class="box">
+                <h2>Reliability Keywords</h2>
+                <iframe src="{{ url_for('spx12') }}" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+        </div>
+            
+        </div>
+    </div>
+  
+
+</body>
+</html>

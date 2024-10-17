@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateMyCourier</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            background-size: cover;
+            background-image: url('/static/bg1.jpg');
+        }
+        .sidebar {
+            width: 210px;
+            background-color: rgb(30, 30, 30);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            margin-left: 230px;
+        }
+        .menu-item {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+        .menu-item.active {
+            background-color: rgba(255, 168, 223, 0.42);
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .menu-item:hover {
+            color: #ffa8df;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+        }
+        .grid-container-1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 10px;
+            margin-top: 10px;
+        }
+        .box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box img {
+            width: 70%;
+            height: 70%;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .box form button {
+            margin-bottom: 20px;
+            padding: 5px 10px;
+        }
+        .welcome-text {
+            color: #ffa8df;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.536);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: black;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #bdbdbd;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            color: white;
+        }
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .flash-message {
+            margin-bottom: 15px;
+        }
+        .flash-success {
+            background-color: #000000;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .flash-error {
+            background-color: #000000;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <a href="/" class="menu-item"><h2>RateMyCourier</h2></a>
+            {% if current_user.is_authenticated %}
+                <div class="welcome-text">
+                    <p class="welcome-text">Welcome, {{ current_user.name }}!</p>
+                </div>
+            {% endif %}
+            <br>
+            <a href="/OverviewPage.html" class="menu-item">Overview</a>
+            <a href="/jntPage.html" class="menu-item">J&T Express</a>
+            <a href="/spxPage.html" class="menu-item">SPX Xpress</a>
+            <a href="/dhlPage.html" class="menu-item">DHL Express</a>
+            <a href="/ComparePage.html" class="menu-item">Comparative Analysis</a>
+            <a href="/AnalyzerPage.html" class="menu-item">New Sentiment Analyzer</a>
+            {% if current_user.is_authenticated %}
+                <a href="/ReportPage.html" class="menu-item active">Summary Report</a>
+                <a href="/logout" class="menu-item">Log Out</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Hidden Flash Messages Container -->
+        <div id="flash-messages" style="display: none;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="grid-container">
+            <div class="box">
+                <h1>Summary Report</h1>
+                <p>Generate a summary report of the analysis results.</p>
+            </div>
+        </div>
+
+        <div class="grid-container-1">
+            <div class="box">
+                <img src="/static/jnt.jpg" alt="jnt">
+                <h2>J&T Express</h2>
+                <form action="/generate_report" method="post">
+                    <input type="hidden" name="courier" value="J&T Express">
+                    <button type="submit">Generate Report</button>
+                </form>
+            </div>
+            <div class="box">
+                <img src="/static/spx.jpg" alt="spx">
+                <h2>SPX Xpress</h2>
+                <form action="/generate_report" method="post">
+                    <input type="hidden" name="courier" value="SPX Xpress">
+                    <button type="submit">Generate Report</button>
+                </form>
+            </div>
+            <div class="box">
+                <img src="/static/dhl.jpg" alt="dhl">
+                <h2>DHL Express</h2>
+                <form action="/generate_report" method="post">
+                    <input type="hidden" name="courier" value="DHL Express">
+                    <button type="submit">Generate Report</button>
+                </form>
+            </div>
+        </div>
+        
+    <!-- The Modal -->
+    <div id="flashModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="flashMessageContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("flashModal");
+        var modalContent = document.getElementById("flashMessageContent");
+        var span = document.getElementsByClassName("close")[0];
+
+        // Get the flash messages from the hidden container
+        var flashMessages = document.getElementById("flash-messages").children;
+        if (flashMessages.length > 0) {
+            // Display flash messages in the modal
+            for (var i = 0; i < flashMessages.length; i++) {
+                modalContent.appendChild(flashMessages[i].cloneNode(true));
+            }
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

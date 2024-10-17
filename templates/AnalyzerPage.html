@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateMyCourier</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff; 
+            min-height: 100vh; 
+            display: flex; 
+            background-image: url('/static/bg1.jpg');
+            background-size: cover;
+        }
+        .sidebar {
+            width: 210px;
+            background-color: rgb(30, 30, 30);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            margin-left: 230px;
+        }
+        .menu-item {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+        .menu-item.active {
+            background-color: rgba(255, 168, 223, 0.42);
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .menu-item:hover {
+            color: #ffa8df;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+        }
+        .grid-container-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+            margin-top: 10px;
+        }
+        .grid-container-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 50px;
+            border-radius: 10px;
+        }
+        .box1 {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box img {
+            width: 70%;
+            height: 30%;
+            border-radius: 10px;
+        }
+        .welcome-text {
+            color: #ffa8df;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        .table th, .table td {
+            border: 1px solid #878787;
+            padding: 8px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #0063cd;
+            color: rgb(255, 255, 255);
+        }
+        .table td {
+            background-color: #e0e0e0;
+            color: rgb(0, 0, 0);
+        }
+        .sentiment-positive {
+            color: rgb(0, 219, 0);
+        }
+        .sentiment-neutral {
+            color: rgb(31, 65, 255);
+        }
+        .sentiment-negative {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <a href="/" class="menu-item"><h2>RateMyCourier</h2></a>
+            {% if current_user.is_authenticated %}
+                <div class="welcome-text">
+                    <p class="welcome-text">Welcome, {{ current_user.name }}!</p>
+                </div>
+            {% endif %}
+            <br>
+            <a href="/OverviewPage.html" class="menu-item">Overview</a>
+            <a href="/jntPage.html" class="menu-item">J&T Express</a>
+            <a href="/spxPage.html" class="menu-item">SPX Xpress</a>
+            <a href="/dhlPage.html" class="menu-item">DHL Express</a>
+            <a href="/ComparePage.html" class="menu-item">Comparative Analysis</a>
+            <a href="/AnalyzerPage.html" class="menu-item active">New Sentiment Analyzer</a>
+            {% if current_user.is_authenticated %}
+                <a href="/ReportPage.html" class="menu-item">Summary Report</a>
+                <a href="/logout" class="menu-item">Log Out</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="grid-container">
+            <div class="box1">
+                <h1>New Sentiment Analyzer</h1>
+                <p>This page enables user to analyze new sentiment.</p>
+            </div>
+        </div>
+
+        <div class="grid-container-2">
+            <div class="box">
+                <h2>Enter text:</h2>
+                <form action="/AnalyzerPage.html" method="POST">
+                    <input type="text" name="sentence">
+                    <input type="submit" value="Analyze">
+                </form>
+            </div>
+
+            <div class="box">
+                <h2>Upload a .csv file:</h2>
+                <form action="/AnalyzerPage.html" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file">
+                    <input type="submit" value="Analyze">
+                </form>
+            </div>
+        </div>
+
+        <div class="grid-container-3">
+            <div class="box">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-message">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% if sentiment_result %}
+                    <h2>Text:</h2>
+                    <p>{{ sentence }}</p>
+                    <br>
+                    <h2>Result:</h2>
+                    <p class="{% if sentiment_result == 'Positive' %}sentiment-positive{% elif sentiment_result == 'Neutral' %}sentiment-neutral{% elif sentiment_result == 'Negative' %}sentiment-negative{% endif %}">
+                        {{ sentiment_result }}
+                    </p>
+                {% endif %}
+
+                {% if success_message %}
+                    <p>{{ success_message }}</p>
+                {% endif %}
+
+                {% if df_html %}
+                    <h2>Result:</h2>
+                    <div>{{ df_html | safe }}</div>
+                    <br>
+                    <form action="/download" method="GET">
+                        <button type="submit">Save File</button>
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="grid-container-2">
+            <div class="box">
+                {% if pie_chart_html %}
+                    <div>{{ pie_chart_html | safe }}</div>
+                {% endif %}
+            </div>
+            <div class="box">
+                {% if bar_chart_html %}
+                    <div>{{ bar_chart_html | safe }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

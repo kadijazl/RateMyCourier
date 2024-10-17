@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateMyCourier</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-size: cover;
+            background-image: url('/static/bg.jpg');
+        }
+        .container {
+            width: 52%;
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #ffa8df;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .info-note {
+            color: #ffa8df;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-note .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: #ffa8df;
+            color: #1f1b24;
+            font-weight: bold;
+        }
+        .cta-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #ffa8df;
+            color: #1f1b24;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .cta-btn:hover {
+            background-color: #f795ca;
+        }
+        footer {
+            width: 100%;
+            padding: 18px 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+        }
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-top: -50px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .guest-link {
+            color: #ffa8df;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .guest-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="container">
+            <h1>RateMyCourier</h1>
+            <p>Your One-Stop Center for Exploring Malaysian Courier Performance</p>
+            <div class="btn-group">
+                <a href="\login" class="cta-btn">Sign In</a>
+                <a href="\OverviewPage.html" class="guest-link">Continue as Guest</a>
+            </div>
+            <p class="info-note"><span class="info-icon">i</span> The data used for this system is dated from 1st April 2023 until 1st April 2024.</p>
+        </div>
+    </div>
+    <footer>
+        &copy; 2024 RateMyCourier. All rights reserved.
+    </footer>
+</body>
+</html>
