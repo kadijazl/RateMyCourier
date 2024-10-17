@@ -10,9 +10,12 @@ import pandas as pd
 import os
 import plotly.express as px
 import plotly.graph_objects as go
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '878965833497b302f30872f5fefcd6e0'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
 # Initialize extensions
