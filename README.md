@@ -10,7 +10,7 @@ X Sentiment Analysis & Visualization of Courier Services in Malaysia using Naive
 - **Data Source**: Reviews are scraped from X using TweetHarvest, while training data are taken from Kaggle and Malaya.
 
 ## 🛠️ Tech Stack
-- Backend: Flask, SQLAlchemy
+- Backend: Flask, SQLAlchemy (SQLite)
 - Machine Learning: Naive Bayes
 - Visualization: Plotly
 - Data: Scraped from X
